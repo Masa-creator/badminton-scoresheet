@@ -1,0 +1,339 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setLabel {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.deuceTag {
+  background: var(--accent-yellow);
+  color: #000;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.08em;
+}
+
+.setsWon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.setsNum {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent-yellow);
+  min-width: 28px;
+  text-align: center;
+}
+
+.setsDivider {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.resetBtn {
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resetBtn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.scoreArea {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  gap: 0;
+}
+
+.scorePanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 16px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s;
+  min-height: 260px;
+}
+
+.scorePanel:active {
+  background: var(--bg-card);
+  transform: none;
+}
+
+.scorePanel.serving {
+  background: var(--bg-secondary);
+  border-bottom: 3px solid var(--accent-blue);
+}
+
+.playerName {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  word-break: break-all;
+}
+
+.serveIndicator {
+  color: var(--accent-blue);
+  font-size: 12px;
+}
+
+.scoreNum {
+  font-size: 96px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.scorePanel.serving .scoreNum {
+  color: var(--accent-yellow);
+}
+
+.tapHint {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.scoreDivider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2px;
+  background: var(--border);
+  position: relative;
+}
+
+.scoreColon {
+  position: absolute;
+  font-size: 24px;
+  color: var(--text-secondary);
+  background: var(--bg-primary);
+  padding: 4px;
+}
+
+.controls {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+}
+
+.undoBtn {
+  padding: 12px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.undoBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.undoBtn:not(:disabled):active {
+  background: var(--border);
+}
+
+.nextSetBtn {
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent-green), #1db954);
+  color: #000;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.setResultBanner {
+  text-align: center;
+  padding: 10px;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 8px;
+}
+
+.setResultText {
+  color: var(--accent-yellow);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.historyWrap {
+  padding: 16px 20px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.historyTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.leftPoint {
+  background: rgba(30, 144, 255, 0.1);
+  border-left: 3px solid var(--accent-blue);
+}
+
+.rightPoint {
+  background: rgba(255, 71, 87, 0.1);
+  border-right: 3px solid var(--accent-red);
+  flex-direction: row-reverse;
+}
+
+.historyScore {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.historyPlayer {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Match Result */
+.matchResult {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 16px;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.trophy {
+  font-size: 72px;
+  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.winnerName {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent-yellow);
+}
+
+.winnerLabel {
+  font-size: 20px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.finalScore {
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.setScores {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.setScore {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.setLabel2 {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.newMatchBtn {
+  margin-top: 16px;
+  padding: 16px 40px;
+  background: var(--accent-blue);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 17px;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(30, 144, 255, 0.4);
+}
