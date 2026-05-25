@@ -157,12 +157,14 @@ export default function ScoreBoard({ game, onReset }) {
             </button>
           </div>
 
-          {/* ─── Score sheet ─── */}
-          <ScoreSheet
-            history={currentSet?.history ?? []}
-            players={setup.players}
-            mode={setup.mode}
-          />
+          {/* ─── Score sheet (scrollable) ─── */}
+          <div className={styles.sheetScroll}>
+            <ScoreSheet
+              history={currentSet?.history ?? []}
+              players={setup.players}
+              mode={setup.mode}
+            />
+          </div>
         </>
       )}
     </div>
