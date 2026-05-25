@@ -1,15 +1,6 @@
 import { useState, useCallback } from 'react'
 
-const initialGameState = (maxPoints) => ({
-  scores: [0, 0],
-  history: [],
-  finished: false,
-  winner: null,
-  maxPoints,
-})
-
 function checkGameOver(scores, maxPoints) {
-  const deucePoint = maxPoints - 1
   const maxCap = maxPoints === 21 ? 30 : 17
   for (let i = 0; i < 2; i++) {
     const other = 1 - i
@@ -19,86 +10,110 @@ function checkGameOver(scores, maxPoints) {
   return null
 }
 
-export function useGame() {
-  const [setup, setSetup] = useState({
-    mode: 'singles',
-    maxPoints: 21,
-    players: ['チーム A', 'チーム B'],
-    started: false,
-  })
+// Returns { servingTeam, servingPlayerIdx, receivingTeam, receivingPlayerIdx, courtSide }
+export function getServerInfo(serviceState, scores, mode) {
+  if (mode === 'singles') {
+    return {
+      servingTeam: serviceState.team,
+      servingPlayerIdx: 0,
+      receivingTeam: 1 - serviceState.team,
+      receivingPlayerIdx: 0,
+      courtSide: null,
+    }
+  }
+  const { team, rightCourt } = serviceState
+  const isEven = scores[team] % 2 === 0
+  const servingPlayerIdx = isEven ? rightCourt[team] : 1 - rightCourt[team]
+  const courtSide = isEven ? 'right' : 'left'
+  const receivingTeam = 1 - team
+  // Receiver is in the same-named court as the server (cross-court diagonal)
+  const receivingPlayerIdx = isEven ? rightCourt[receivingTeam] : 1 - rightCourt[receivingTeam]
+  return { servingTeam: team, servingPlayerIdx, receivingTeam, receivingPlayerIdx, courtSide }
+}
 
+const initialSet = (maxPoints) => ({
+  scores: [0, 0],
+  history: [],
+  finished: false,
+  winner: null,
+  maxPoints,
+})
+
+export function useGame() {
+  const [setup, setSetup] = useState({ started: false })
   const [sets, setSets] = useState([])
   const [setsWon, setSetsWon] = useState([0, 0])
   const [currentSet, setCurrentSet] = useState(null)
   const [matchOver, setMatchOver] = useState(false)
   const [matchWinner, setMatchWinner] = useState(null)
-  const [service, setService] = useState(0)
+  // serviceState: { team: 0|1, rightCourt: [playerIdxInRightForTeam0, playerIdxInRightForTeam1] }
+  const [serviceState, setServiceState] = useState({ team: 0, rightCourt: [0, 0] })
 
   const startGame = useCallback((config) => {
-    const newSet = initialGameState(config.maxPoints)
     setSetup({ ...config, started: true })
-    setCurrentSet(newSet)
+    setCurrentSet(initialSet(config.maxPoints))
     setSets([])
     setSetsWon([0, 0])
     setMatchOver(false)
     setMatchWinner(null)
-    setService(0)
+    setServiceState({ team: 0, rightCourt: [0, 0] })
   }, [])
 
-  const addPoint = useCallback((player) => {
-    if (!currentSet || currentSet.finished || matchOver) return null
+  const addPoint = useCallback((scoringTeam) => {
+    if (!currentSet || currentSet.finished || matchOver) return
 
     setCurrentSet((prev) => {
       const newScores = [...prev.scores]
-      newScores[player] += 1
-      const newHistory = [...prev.history, { player, scores: [...newScores] }]
+      newScores[scoringTeam] += 1
 
-      const winner = checkGameOver(newScores, prev.maxPoints)
+      const serverInfo = getServerInfo(serviceState, prev.scores, setup.mode)
+      const entry = { scoringTeam, scores: [...newScores], serverInfo, serviceStateBefore: { ...serviceState, rightCourt: [...serviceState.rightCourt] } }
+      const newHistory = [...prev.history, entry]
 
-      if (winner !== null) {
-        const newSet = { ...prev, scores: newScores, history: newHistory, finished: true, winner }
-
-        setSets((prevSets) => {
-          const updatedSets = [...prevSets, newSet]
-          return updatedSets
+      // Update service state
+      if (scoringTeam === serviceState.team) {
+        // Serving team scored → swap their courts
+        setServiceState((s) => {
+          const rc = [...s.rightCourt]
+          rc[scoringTeam] = 1 - rc[scoringTeam]
+          return { ...s, rightCourt: rc }
         })
-
-        setSetsWon((prev) => {
-          const updated = [...prev]
-          updated[winner] += 1
-          const newWon = updated
-
-          if (newWon[0] >= 2 || newWon[1] >= 2) {
-            setMatchOver(true)
-            setMatchWinner(newWon[0] >= 2 ? 0 : 1)
-          }
-
-          return updated
-        })
-
-        return { ...newSet, justFinished: true }
+      } else {
+        // Receiving team scored → service changes, no swap
+        setServiceState((s) => ({ ...s, team: scoringTeam }))
       }
 
-      setService(player)
+      const winner = checkGameOver(newScores, prev.maxPoints)
+      if (winner !== null) {
+        const finishedSet = { ...prev, scores: newScores, history: newHistory, finished: true, winner }
+        setSets((ps) => [...ps, finishedSet])
+        setSetsWon((pw) => {
+          const u = [...pw]
+          u[winner] += 1
+          if (u[0] >= 2 || u[1] >= 2) {
+            setMatchOver(true)
+            setMatchWinner(u[0] >= 2 ? 0 : 1)
+          }
+          return u
+        })
+        return finishedSet
+      }
       return { ...prev, scores: newScores, history: newHistory }
     })
-
-    return null
-  }, [currentSet, matchOver])
+  }, [currentSet, matchOver, serviceState, setup.mode])
 
   const undoPoint = useCallback(() => {
-    if (!currentSet || currentSet.finished) return
+    if (!currentSet || currentSet.finished || !currentSet.history.length) return
 
     setCurrentSet((prev) => {
-      if (prev.history.length === 0) return prev
       const newHistory = prev.history.slice(0, -1)
-      const lastEntry = newHistory[newHistory.length - 1]
-      const newScores = lastEntry ? [...lastEntry.scores] : [0, 0]
+      const lastEntry = prev.history[prev.history.length - 1]
+      const newScores = newHistory.length > 0
+        ? [...newHistory[newHistory.length - 1].scores]
+        : [0, 0]
 
-      const prevServer = newHistory.length > 0
-        ? newHistory[newHistory.length - 1].player
-        : 0
-      setService(prevServer)
+      // Restore service state from before this point
+      setServiceState({ ...lastEntry.serviceStateBefore, rightCourt: [...lastEntry.serviceStateBefore.rightCourt] })
 
       return { ...prev, scores: newScores, history: newHistory }
     })
@@ -106,25 +121,32 @@ export function useGame() {
 
   const startNextSet = useCallback(() => {
     if (matchOver) return
-    const newSet = initialGameState(setup.maxPoints)
-    setCurrentSet(newSet)
-    setService(setsWon[0] + setsWon[1] === 2 ? service : service)
-  }, [matchOver, setup.maxPoints, setsWon, service])
+    setCurrentSet(initialSet(setup.maxPoints))
+    // Keep current service state (player who last scored serves first)
+  }, [matchOver, setup.maxPoints])
 
   const resetMatch = useCallback(() => {
-    setSetup((prev) => ({ ...prev, started: false }))
+    setSetup((p) => ({ ...p, started: false }))
     setCurrentSet(null)
     setSets([])
     setSetsWon([0, 0])
     setMatchOver(false)
     setMatchWinner(null)
-    setService(0)
+    setServiceState({ team: 0, rightCourt: [0, 0] })
   }, [])
 
-  const isInterval = currentSet && !currentSet.finished
-    ? (setsWon[0] + setsWon[1] === 2 && currentSet.scores[0] === 11 && currentSet.scores[1] < 11)
-      || (setsWon[0] + setsWon[1] === 2 && currentSet.scores[1] === 11 && currentSet.scores[0] < 11)
-    : false
+  const serverInfo = currentSet && !currentSet.finished
+    ? getServerInfo(serviceState, currentSet.scores, setup.mode)
+    : null
+
+  // 第3ゲーム 11点インターバル判定
+  const isThirdGameInterval = currentSet && !currentSet.finished
+    && (setsWon[0] + setsWon[1] === 2)
+    && currentSet.history.length > 0
+    && (currentSet.scores[0] === 11 || currentSet.scores[1] === 11)
+    && Math.abs(currentSet.scores[0] - currentSet.scores[1]) > 0
+    && (currentSet.history[currentSet.history.length - 1]?.scores[0] === 11
+      || currentSet.history[currentSet.history.length - 1]?.scores[1] === 11)
 
   return {
     setup,
@@ -133,8 +155,8 @@ export function useGame() {
     setsWon,
     matchOver,
     matchWinner,
-    service,
-    isInterval,
+    serviceState,
+    serverInfo,
     startGame,
     addPoint,
     undoPoint,

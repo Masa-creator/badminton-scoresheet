@@ -1,172 +1,289 @@
-.container {
+/* ─── Page layout ─────────────────────────────────────────────── */
+.page {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+  width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  width: 100%;
+  background: var(--bg-primary);
 }
 
+/* ─── Header ──────────────────────────────────────────────────── */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 12px 16px;
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .headerLeft {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
 .setLabel {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .deuceTag {
   background: var(--accent-yellow);
   color: #000;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  padding: 3px 8px;
+  padding: 3px 7px;
   border-radius: 20px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  flex-shrink: 0;
 }
 
 .setsWon {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .setsNum {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--accent-yellow);
-  min-width: 28px;
+  font-size: 26px;
+  font-weight: 900;
+  min-width: 26px;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
-.setsDivider {
-  font-size: 18px;
+.setsNumA { color: var(--accent-blue); }
+.setsNumB { color: var(--accent-red); }
+
+.setsDash {
+  font-size: 20px;
   color: var(--text-secondary);
 }
 
 .resetBtn {
   background: transparent;
   color: var(--text-secondary);
-  font-size: 18px;
-  width: 36px;
-  height: 36px;
+  font-size: 16px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.resetBtn:hover {
-  background: var(--bg-card);
-  color: var(--text-primary);
-}
-
-.scoreArea {
+/* ─── Score panels ────────────────────────────────────────────── */
+.scoreRow {
   display: flex;
-  flex: 1;
-  min-height: 0;
-  gap: 0;
+  flex: 0 0 auto;
 }
 
-.scorePanel {
+.divider {
+  width: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.panel {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 32px 16px;
+  gap: 8px;
+  padding: 20px 12px;
   background: var(--bg-primary);
   cursor: pointer;
   border: none;
-  transition: background 0.15s;
-  min-height: 260px;
+  min-height: 200px;
+  transition: background 0.1s;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.scorePanel:active {
+.panel:active:not(.panelDisabled) {
   background: var(--bg-card);
   transform: none;
 }
 
-.scorePanel.serving {
+.panelServing {
   background: var(--bg-secondary);
-  border-bottom: 3px solid var(--accent-blue);
 }
 
-.playerName {
+.panelDisabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+/* Player names section */
+.playerNames {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  align-items: center;
+}
+
+.singleName {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
-  text-align: center;
-  word-break: break-all;
 }
 
-.serveIndicator {
-  color: var(--accent-blue);
-  font-size: 12px;
+.serveArrow {
+  font-size: 14px;
 }
 
+/* Doubles player badge */
+.playerBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  width: 100%;
+  background: transparent;
+  transition: background 0.1s;
+}
+
+.badgeServe {
+  background: rgba(255, 215, 0, 0.12);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.badgeReceive {
+  background: rgba(46, 213, 115, 0.08);
+  border: 1px solid rgba(46, 213, 115, 0.2);
+}
+
+.badgeName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.badgeRole {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.badgeServe .badgeRole {
+  color: var(--accent-yellow);
+}
+
+.badgeReceive .badgeRole {
+  color: var(--accent-green);
+}
+
+/* Score number */
 .scoreNum {
-  font-size: 96px;
+  font-size: 88px;
   font-weight: 900;
   line-height: 1;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
 }
 
-.scorePanel.serving .scoreNum {
+.scoreServing {
   color: var(--accent-yellow);
 }
 
 .tapHint {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ─── Service info bar ────────────────────────────────────────── */
+.serviceInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255, 215, 0, 0.06);
+  border-top: 1px solid rgba(255, 215, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+  flex-wrap: wrap;
+}
+
+.serviceRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.serviceIcon {
+  font-size: 14px;
+}
+
+.serviceName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-yellow);
+}
+
+.serviceCourt {
   font-size: 12px;
   color: var(--text-secondary);
 }
 
-.scoreDivider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2px;
-  background: var(--border);
-  position: relative;
-}
-
-.scoreColon {
-  position: absolute;
-  font-size: 24px;
+.serviceArrow {
+  font-size: 18px;
   color: var(--text-secondary);
-  background: var(--bg-primary);
-  padding: 4px;
 }
 
-.controls {
-  padding: 16px 20px;
+/* ─── Set finished banner ─────────────────────────────────────── */
+.setFinishedBanner {
+  padding: 14px 16px;
+  background: rgba(255, 215, 0, 0.08);
+  border-top: 1px solid rgba(255, 215, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.25);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
+}
+
+.setFinishedText {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  text-align: center;
+}
+
+.nextSetBtn {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, var(--accent-green), #1db954);
+  color: #000;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* ─── Controls ────────────────────────────────────────────────── */
+.controls {
+  padding: 12px 16px;
   background: var(--bg-secondary);
   border-top: 1px solid var(--border);
 }
 
 .undoBtn {
-  padding: 12px;
+  width: 100%;
+  padding: 14px;
   background: var(--bg-card);
   color: var(--text-secondary);
   border-radius: 10px;
@@ -177,98 +294,21 @@
 }
 
 .undoBtn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+  opacity: 0.35;
 }
 
 .undoBtn:not(:disabled):active {
   background: var(--border);
 }
 
-.nextSetBtn {
-  padding: 14px;
-  background: linear-gradient(135deg, var(--accent-green), #1db954);
-  color: #000;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.setResultBanner {
-  text-align: center;
-  padding: 10px;
-  background: rgba(255, 215, 0, 0.1);
-  border: 1px solid rgba(255, 215, 0, 0.3);
-  border-radius: 8px;
-}
-
-.setResultText {
-  color: var(--accent-yellow);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.historyWrap {
-  padding: 16px 20px;
-  flex: 1;
-  overflow-y: auto;
-}
-
-.historyTitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 10px;
-}
-
-.historyList {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.historyItem {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.leftPoint {
-  background: rgba(30, 144, 255, 0.1);
-  border-left: 3px solid var(--accent-blue);
-}
-
-.rightPoint {
-  background: rgba(255, 71, 87, 0.1);
-  border-right: 3px solid var(--accent-red);
-  flex-direction: row-reverse;
-}
-
-.historyScore {
-  font-weight: 700;
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-}
-
-.historyPlayer {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-/* Match Result */
+/* ─── Match result ────────────────────────────────────────────── */
 .matchResult {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex: 1;
-  gap: 16px;
+  gap: 12px;
   padding: 40px 24px;
   text-align: center;
 }
@@ -276,28 +316,29 @@
 .trophy {
   font-size: 72px;
   filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
-  animation: pulse 2s infinite;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.winnerName {
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--accent-yellow);
+  50% { transform: scale(1.06); }
 }
 
 .winnerLabel {
-  font-size: 20px;
-  color: var(--text-primary);
+  font-size: 16px;
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
+.winnerName {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--accent-yellow);
+  line-height: 1.2;
+}
+
 .finalScore {
-  font-size: 56px;
+  font-size: 52px;
   font-weight: 900;
   color: var(--text-primary);
   font-variant-numeric: tabular-nums;
@@ -305,30 +346,36 @@
 
 .setScores {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.setScore {
+.setScoreItem {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 8px 16px;
+  padding: 8px 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  gap: 3px;
 }
 
 .setLabel2 {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-secondary);
 }
 
+.setScoreVal {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
 .newMatchBtn {
-  margin-top: 16px;
+  margin-top: 12px;
   padding: 16px 40px;
   background: var(--accent-blue);
   color: #fff;

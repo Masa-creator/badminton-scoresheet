@@ -1,0 +1,147 @@
+.wrap {
+  padding: 16px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.th {
+  padding: 8px 6px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.leftTh { text-align: right; border-right: 1px solid var(--border); }
+.centerTh { text-align: center; width: 80px; }
+.rightTh { text-align: left; border-left: 1px solid var(--border); }
+
+.td {
+  padding: 5px 6px;
+  border-bottom: 1px solid rgba(30, 58, 110, 0.4);
+  vertical-align: middle;
+}
+
+.table tr:last-child .td {
+  border-bottom: none;
+}
+
+.markCell {
+  width: 40%;
+  min-width: 80px;
+}
+
+.markRight {
+  text-align: left;
+  border-left: 1px solid var(--border);
+}
+
+.markCell:first-child {
+  text-align: right;
+  border-right: 1px solid var(--border);
+}
+
+.scoreCell {
+  width: 80px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.scoreSep {
+  color: var(--text-secondary);
+  margin: 0 3px;
+}
+
+.scoreLeft {
+  color: var(--accent-blue);
+}
+
+.scoreRight {
+  color: var(--accent-red);
+}
+
+.rowLeft {
+  background: rgba(30, 144, 255, 0.05);
+}
+
+.rowRight {
+  background: rgba(255, 71, 87, 0.05);
+}
+
+.mark {
+  font-size: 16px;
+  font-weight: 700;
+  display: inline;
+}
+
+.markServe {
+  color: var(--accent-yellow);
+}
+
+.markReceive {
+  color: var(--text-secondary);
+}
+
+.scorer {
+  display: block;
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+  text-align: right;
+}
+
+.markRight .scorer {
+  text-align: left;
+}
+
+.scoredLeft {
+  color: var(--accent-blue);
+}
+
+.scoredRight {
+  color: var(--accent-red);
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
